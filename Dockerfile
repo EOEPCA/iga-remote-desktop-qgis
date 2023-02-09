@@ -1,4 +1,4 @@
-FROM TBD
+FROM eoepca/iga-remote-desktop:latest
 
 USER root
 
