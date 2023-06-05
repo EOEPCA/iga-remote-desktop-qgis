@@ -1,7 +1,7 @@
 # QGIS via Remote Desktop
 
 
-This interactive application provides a remote desktop with QGIS via JupyterHub.
+This interactive application provides a remote desktop with QGIS via JupyterHub. 
 
 It relies on the [jupyter-remote-desktop-proxy](https://github.com/jupyterhub/jupyter-remote-desktop-proxy)
 
