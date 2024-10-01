@@ -2,7 +2,7 @@ FROM eoepca/iga-remote-desktop:1.1.0
 
 USER root
 
-RUN apt update && apt-get install -y libgl1-mesa-dev ocl-icd-opencl-dev 
+RUN apt update && apt-get install -y libgl1-mesa-dev ocl-icd-opencl-dev wmctrl
 
 RUN mamba create -n env_qgis -c conda-forge "qgis>=3.38.3" #&& cd /opt/conda/lib && ln -s  /opt/conda/lib/libprotobuf.so.24 libprotobuf-lite.so.23 && conda clean -a
 
