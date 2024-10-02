@@ -8,6 +8,8 @@ RUN mamba create -n env_qgis -c conda-forge "qgis>=3.38.3" #&& cd /opt/conda/lib
 
 ENV PATH=/opt/conda/envs/env_qgis/bin:$PATH
 
+ADD qgis.desktop /etc/xdg/autostart/qgis.desktop
+
 RUN chown -R $NB_UID:$NB_GID $HOME
 
 USER $NB_USER
