@@ -52,3 +52,9 @@ The image tag is derived automatically from the Git reference that triggered the
 | `develop` branch | `latest-dev` | Development and integration builds |
 | `main` branch    | `latest`     | Stable branch builds               |
 | Git tag `vX.Y.Z` | `X.Y.Z`      | Immutable release builds           |
+
+## QGIS versions
+
+| Image tag    | QGIS version |
+| ------------ | ------------ |
+|    1.2.0     |    3.44.7    |
