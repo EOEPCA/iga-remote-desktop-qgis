@@ -11,8 +11,21 @@ RUN mamba create -n env_qgis -c conda-forge "qgis==$QGIS_VERSION" && mamba clean
 
 ENV PATH=/opt/conda/envs/env_qgis/bin:$PATH
 
-ADD qgis.desktop /etc/xdg/autostart/qgis.desktop
-
 RUN chown -R $NB_UID:$NB_GID $HOME
 
+COPY qgis.desktop /etc/xdg/autostart/qgis.desktop
+COPY qgis.desktop /usr/share/applications/qgis.desktop
+
+
+
+ENV PYTHONPATH=/opt/conda/envs/env_qgis/share/qgis/python
+ARG QGIS_PLUGIN_MANAGER_VERSION=1.7.5
+RUN pip3 install qgis-plugin-manager==$QGIS_PLUGIN_MANAGER_VERSION \
+  && qgis-plugin-manager init \
+  && qgis-plugin-manager update \
+  && qgis-plugin-manager install "STAC API Browser" 
+
 USER $NB_USER
+
+
+
