@@ -1,4 +1,4 @@
-FROM ghcr.io/eoepca/iga-remote-desktop:1.2.0
+FROM ghcr.io/eoepca/iga-remote-desktop:latest-dev
 
 USER root
 
