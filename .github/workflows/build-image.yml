@@ -95,7 +95,7 @@ jobs:
       # Trivy scan is report-only until a vulnerability gate is agreed.
       # --------------------------------------------------------
       - name: Trivy scan (report-only)
-        uses: docker://aquasec/trivy:0.74.0
+        uses: docker://aquasec/trivy:0.76.2
         env:
           TRIVY_DB_REPOSITORY: ghcr.io/aquasecurity/trivy-db
         with:
@@ -107,7 +107,7 @@ jobs:
             --no-progress
 
       - name: Generate SBOM (SPDX JSON)
-        uses: docker://aquasec/trivy:0.74.0
+        uses: docker://aquasec/trivy:0.76.2
         env:
           TRIVY_DB_REPOSITORY: ghcr.io/aquasecurity/trivy-db
         with:
