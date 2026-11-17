@@ -35,12 +35,13 @@ This project publishes container images to GitHub Container Registry (GHCR) foll
 Images are published to:
 
 ```
-ghcr.io/<repository-owner>/iga-remote-desktop
+ghcr.io/<repository-owner>/iga-remote-desktop-qgis
 ```
 
 The registry owner corresponds to the GitHub repository owner (user or organization).
 
-Images are built using Kaniko and pushed using OCI-compliant tooling.
+Images are built with Docker Buildx, scanned as a Docker archive, and published
+with Skopeo. Pull requests run the same build and scan but cannot publish.
 
 ### Tagging Strategy
 
@@ -58,3 +59,16 @@ The image tag is derived automatically from the Git reference that triggered the
 | Image tag    | QGIS version |
 | ------------ | ------------ |
 |    1.2.0     |    3.44.7    |
+
+## Image maintenance and validation
+
+The Dockerfile pins the remote-desktop parent to release `1.2.0`, QGIS to
+`3.44.7`, and the QGIS plugin manager to `1.7.5`. Update these versions in
+reviewed pull requests; require a successful image build and QGIS desktop smoke
+test before release. A Fedora migration needs separate QGIS, conda-forge, and
+desktop compatibility evidence.
+
+Pull requests build and scan the image without publishing it, then retain an
+SPDX SBOM for seven days. Trivy HIGH/CRITICAL findings are report-only and are
+not a security certification. Monthly Dependabot updates check Docker base
+images and GitHub Actions.
