@@ -18,7 +18,7 @@
 #
 # No Mamba or Conda commands.
 # ============================================================
-
+#TODO pin exact iga-remote-desktop ver, e.g. 1.3.0
 ARG BASE_IMAGE=ghcr.io/eoepca/iga-remote-desktop:latest-dev
 FROM ${BASE_IMAGE}
 
