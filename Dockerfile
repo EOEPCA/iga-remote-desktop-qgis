@@ -13,7 +13,7 @@
 # reference below.
 # ============================================================
 
-ARG BASE_IMAGE=ghcr.io/eoepca/iga-remote-desktop:1.3.0
+ARG BASE_IMAGE=ghcr.io/eoepca/iga-remote-desktop:latest
 FROM ${BASE_IMAGE}
 
 USER root
