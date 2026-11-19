@@ -1,4 +1,3 @@
-
 # syntax=docker/dockerfile:1.7
 
 # ============================================================
@@ -35,11 +34,35 @@ ENV DEBIAN_FRONTEND=noninteractive \
 # Install QGIS and Python bindings together to ensure
 # compatible Qt, GDAL, GEOS, PROJ and SIP libraries.
 # ------------------------------------------------------------
+ARG QGIS_VERSION=3.44.15
+ARG QGIS_REPOSITORY=https://qgis.org/ubuntu-ltr
+ARG QGIS_ARCHIVE_KEYRING_URL=https://download.qgis.org/downloads/qgis-archive-keyring.gpg
+
 RUN set -eux; \
     apt-get update -o Acquire::Retries=5; \
     apt-get install -y --no-install-recommends \
       ca-certificates \
-      curl \
+      curl; \
+    install -d -m 755 /etc/apt/keyrings; \
+    curl --fail --silent --show-error --location \
+      "${QGIS_ARCHIVE_KEYRING_URL}" \
+      --output /etc/apt/keyrings/qgis-archive-keyring.gpg; \
+    . /etc/os-release; \
+    test "${VERSION_CODENAME}" = noble; \
+    printf '%s\n' \
+      'Types: deb' \
+      "URIs: ${QGIS_REPOSITORY}" \
+      "Suites: ${VERSION_CODENAME}" \
+      "Architectures: $(dpkg --print-architecture)" \
+      'Components: main' \
+      'Signed-By: /etc/apt/keyrings/qgis-archive-keyring.gpg' \
+      > /etc/apt/sources.list.d/qgis.sources; \
+    apt-get update -o Acquire::Retries=5; \
+    qgis_package_version="$(apt-cache madison qgis | awk -v version="${QGIS_VERSION}" '$3 == version || $3 ~ (":" version "\\+") { print $3; exit }')"; \
+    test -n "${qgis_package_version}"; \
+    python_qgis_package_version="$(apt-cache madison python3-qgis | awk -v version="${QGIS_VERSION}" '$3 == version || $3 ~ (":" version "\\+") { print $3; exit }')"; \
+    test -n "${python_qgis_package_version}"; \
+    apt-get install -y --no-install-recommends \
       wmctrl \
       libgl1 \
       libegl1 \
@@ -49,8 +72,8 @@ RUN set -eux; \
       python3 \
       python3-venv \
       python3-pip \
-      python3-qgis \
-      qgis; \
+      "python3-qgis=${python_qgis_package_version}" \
+      "qgis=${qgis_package_version}"; \
     apt-get clean; \
     rm -rf /var/lib/apt/lists/*
 
@@ -206,6 +229,10 @@ RUN set -eux; \
     /opt/conda/bin/uv --version; \
     /opt/qgis/plugin-manager/.venv/bin/python -c \
       'import qgis.core; print("QGIS Python bindings OK")'; \
+    /usr/bin/python3 -c \
+      'from qgis.core import Qgis; \
+       assert Qgis.QGIS_VERSION.startswith("3.44.15"), Qgis.QGIS_VERSION; \
+       print("QGIS version:", Qgis.QGIS_VERSION)'; \
     QT_QPA_PLATFORM=offscreen \
       /usr/local/bin/qgis-launch --version; \
     qgis-plugin-manager --help; \
